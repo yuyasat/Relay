@@ -5,7 +5,7 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool:      <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host:      <%= ENV.fetch('PGHOST', 'localhost') %>
-  port:      <%= ENV.fetch('PGPORT', '5432') %>
+  port:      <%= ENV.fetch('PGPORT', '5433') %>
   database:  <%= ENV.fetch('PGDATABASE', 'relay_development')  %>
   username:  <%= ENV.fetch('PGUSER', 'relay') %>
   password:  <%= ENV.fetch('PGPASSWORD', 'relay') %>

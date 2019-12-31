@@ -3,7 +3,6 @@ class SessionsController < ApplicationController
   end
 
   def create
-    binding.pry
     user = login(params[:email], params[:password])
     if user.present?
       redirect_to root_path, notice: 'ログインしました'
