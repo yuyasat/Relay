@@ -46,7 +46,6 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
   gem 'awesome_print'
-  gem 'spring-commands-rspec'
   gem 'rails-erd'
   gem 'rubocop', '~> 0.58.2', require: false
 end
@@ -57,9 +56,14 @@ group :test do
   gem 'rails-controller-testing', require: false
   gem 'factory_bot_rails'
   gem 'capybara'
-  gem 'poltergeist'
   gem 'database_cleaner'
   gem 'simplecov'
   gem 'codecov', require: false
   gem 'codeclimate-test-reporter', require: false
+  gem "rspec_junit_formatter"
+  gem 'rspec-wait'
+  gem 'spring-commands-rspec'
+  gem 'parallel_tests'
+  gem 'webdrivers'
+  gem 'rubocop-rspec'
 end

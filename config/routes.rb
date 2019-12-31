@@ -7,6 +7,13 @@ Rails.application.routes.draw do
   get 'sitemap' => 'pages#sitemap'
   get 'component-library' => 'pages#component_library' if Rails.env.development?
 
+  get 'login' => 'sessions#new'
+  resources :sessions, only: %i[create]
+  get 'logout' => 'sessions#destroy'
+
+  get 'signup' => 'users#new'
+  resources :users, only: %i[create]
+
   namespace :internal do
     namespace :api do
     end

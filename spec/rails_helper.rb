@@ -1,21 +1,17 @@
-ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
-abort("The Rails environment is running in production mode!") if Rails.env.production?
-require 'spec_helper'
-require 'rspec/rails'
-require 'rails-controller-testing'
-require 'devise'
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
-
+# This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'simplecov'
 SimpleCov.start 'rails'
-if ENV['CODECOV_TOKEN']
+if ENV['CI'] == 'true'
   require 'codecov'
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
-include Warden::Test::Helpers
-Warden.test_mode!
+require 'spec_helper'
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../config/environment', __dir__)
+# Prevent database truncation if the environment is production
+abort('The Rails environment is running in production mode!') if Rails.env.production?
+require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -26,9 +22,36 @@ Warden.test_mode!
 # end with _spec.rb. You can configure this pattern with the --pattern
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
 #
-ActiveRecord::Migration.maintain_test_schema!
+# The following line is provided for convenience purposes. It has the downside
+# of increasing the boot-up time by auto-requiring all files in the support
+# directory. Alternatively, in the individual `*_spec.rb` files, manually
+# require only the support files necessary.
+#
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+
+# Checks for pending migrations and applies them before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+# ActiveRecord::Migration.maintain_test_schema!
+
+# https://stackoverflow.com/questions/47182364/how-to-set-screen-size-for-chrome-headless-system-test-in-rails-5-1
+Capybara.register_driver :selenium_chrome_headless do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  [
+    'headless',
+    'window-size=1280x1280',
+    'disable-gpu', # https://developers.google.com/web/updates/2017/04/headless-chrome
+  ].each { |arg| options.add_argument(arg) }
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
 
 RSpec.configure do |config|
+  # config.include Sorcery::TestHelpers::Rails::Integration, type: :request
+  config.include Sorcery::TestHelpers::Rails::Controller, type: :controller
+  config.include FactoryBot::Syntax::Methods
+  config.include ActiveJob::TestHelper
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
@@ -36,18 +59,6 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
-
-  config.include Devise::Test::ControllerHelpers, type: :controller
-  %i(controller request).each do |type|
-    config.include ::Rails::Controller::Testing::TestProcess, type: type
-    config.include ::Rails::Controller::Testing::TemplateAssertions, type: type
-    config.include ::Rails::Controller::Testing::Integration, type: type
-  end
-  config.include RSpec::Rails::RequestExampleGroup, type: :request
-  config.include FactoryBot::Syntax::Methods
-  FactoryBot::SyntaxRunner.class_eval do
-    include RSpec::Mocks::ExampleMethods
-  end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -68,4 +79,21 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.before(:suite) do
+  end
+
+  # capybara
+  # Capybara::Screenshot.autosave_on_failure = ENV['CAPYBARA_SCREENSHOT']&.to_b
+  # Capybara.default_max_wait_time = 2
+
+  config.before(:each, type: :system) do
+    Kaminari.configure { |c| c.default_per_page = 30 }
+  end
+
+  config.before(:each, type: :system) do
+    if ENV['SELENIUM_CHROME_HEADLESS']&.to_b
+      driven_by :selenium_chrome_headless, screen_size: [1400, 1400]
+    end
+  end
 end

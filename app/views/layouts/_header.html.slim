@@ -44,3 +44,18 @@
                     i.fa[class="fa-#{icon} is-#{key} menu__icon"]
                     div
                       span.menu__main = label
+              - if current_user
+                li.menu__item[itemprop="name"]
+                  = link_to logout_path do
+                    div
+                      span.menu__main ログアウト
+                li.menu__item[itemprop="name"]
+                  a
+                    div
+                      span.menu__main = "#{current_user.nickname}でログイン中"
+              - else
+                li.menu__item[itemprop="name"]
+                  = link_to login_path do
+                    div
+                      span.menu__main ログイン
+
