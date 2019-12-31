@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get 'signup' => 'users#new'
   resources :users, only: %i[create]
+  resources :relay_mangas, only: %i[index], path: '/relay-magnas'
 
   namespace :internal do
     namespace :api do

@@ -1,0 +1,18 @@
+.l-main-content
+
+  .breadcrumb.l-mb-xs-15.l-mb-sm-30
+    ol
+      li = link_to 'ホーム', root_path
+      li = 'リレー漫画一覧'
+
+  .l-container
+    .l-row
+      .l-col-md-12
+        .l-mb-xs-10.l-mb-md-20
+          h1.category-head__title = 'リレー漫画一覧'
+        .l-col-md-12.l-mb-xs-15
+          .link-list
+            ul.link-list__list
+              - @relay_mangas.each do |relay_manga|
+                li
+                  = link_to "#{relay_manga.genres.map(&:name).join('×') } | #{relay_manga.title}", root_path
