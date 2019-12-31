@@ -1,0 +1,31 @@
+- content_for :title do
+  = t('.title')
+
+.l-main-content
+  .breadcrumb.l-mb-xs-15.l-mb-sm-30
+    ol
+      li = link_to 'ホーム', root_path
+      - if params[:kana].blank? && params[:en].blank?
+        li YouTuber一覧
+      - else
+        li = link_to 'YouTuber一覧', video_artists_path
+        li = params[:kana] || params[:en]
+
+  .l-container.l-mb-xs-50
+    .l-row
+      .l-col-md-3
+        .link-list.l-mb-xs-15
+          h1.link-list__head YouTuber一覧
+          ul.link-list__list
+            - VideoArtist::KANA.each do |char|
+              li.header-border.small
+                = link_to "#{char[0]}行（#{char.join}）", video_artists_path(kana: char[0])
+            - VideoArtist::ALPHABET_GROUP.each do |char|
+              li.header-border.small
+                = link_to char.join(' '), video_artists_path(en: char.join)
+
+      .l-col-md-9
+        .l-row
+          = render partial: 'module/account', collection: @video_artists, as: 'account'
+        .l-row.l-mb-xs-30.l-mb-lg-50
+          = paginate @video_artists

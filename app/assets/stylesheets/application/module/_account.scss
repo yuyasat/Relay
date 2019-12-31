@@ -1,0 +1,35 @@
+.account {
+  &__inner {
+    display: flex;
+    align-items: center;
+    @include screen-size(sm) {
+      display: block;
+    }
+  }
+  &__avatar {
+    width: 90px;
+    height: 90px;
+    margin-right: 10px;
+    @include screen-size(sm) {
+      margin-right: auto;
+      margin-left: auto;
+      width: 60%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+  }
+  &__text {
+    flex: 1;
+    overflow: hidden;
+  }
+  &__name {
+    margin-bottom: 5px;
+    @include font(lb);
+    @include screen-size(sm) {
+      text-align: center;
+    }
+  }
+  &__comment {
+    @include font(s);
+  }
+}

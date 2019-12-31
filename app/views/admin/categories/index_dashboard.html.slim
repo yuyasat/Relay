@@ -1,0 +1,71 @@
+= render 'index_new'
+
+.row
+  .bs-component
+    ul.nav.nav-tabs
+      li = link_to 'カテゴリー一覧', admin_categories_path
+      li = link_to '並び替え', sort_admin_categories_path
+      li.active = link_to 'ダッシュボード', dashboard_admin_categories_path
+
+table.table.table-striped.table-hover.admin
+  thead
+    tr
+      th 大カテゴリ
+      th 動画数
+      th 中カテゴリ
+      th 動画数
+      th 小カテゴリ
+      th 動画数
+  tbody
+    - @dashboard.each.with_index do |(cat1, cat1_summary), i|
+      tr
+        td{rowspan="#{cat1_summary[:height]}"} = link_to cat1.name, admin_category_path(cat1)
+        td.text-center{rowspan="#{cat1_summary[:height]}"}
+          = cat1_summary[:movie_count]
+          - if cat1_summary[:children].size > 1
+            br
+            = "（#{cat1_summary[:self_movie_count]}）"
+        - if cat1_summary[:children].present?
+          - cat2 = cat1_summary[:children].first.first
+          - cat2_summary = cat1_summary[:children].first.last
+          td{rowspan="#{cat2_summary[:height]}"} = link_to cat2.name, admin_category_path(cat2)
+          td.text-center{rowspan="#{cat2_summary[:height]}"}
+            = cat2_summary[:movie_count]
+            - if cat2_summary[:children].size > 1
+              br
+              = "（#{cat2_summary[:self_movie_count]}）"
+          - if cat2_summary[:children].present?
+            - cat3 = cat2_summary[:children].first.first
+            - cat3_summary = cat2_summary[:children].first.last
+            td = link_to cat3.name, admin_category_path(cat3)
+            td.text-center = cat3_summary[:movie_count]
+          - else
+            td
+            td
+        - else
+          td
+          td
+          td
+          td
+      - cat1_summary[:children].each.with_index do |(cat2, cat2_summary), j|
+        - unless j.zero?
+          tr
+            td{rowspan="#{cat2_summary[:height]}"} = link_to cat2.name, admin_category_path(cat2)
+            td.text-center{rowspan="#{cat2_summary[:height]}"}
+              = cat2_summary[:movie_count]
+              - if cat2_summary[:children].size > 1
+                br
+                = "（#{cat2_summary[:self_movie_count]}）"
+            - if cat2_summary[:children].present?
+              - cat3 = cat2_summary[:children].first.first
+              - cat3_summary = cat2_summary[:children].first.last
+              td{rowspan="#{cat2_summary[:children].first.last[:height]}"} = link_to cat3.name, admin_category_path(cat3)
+              td.text-center{rowspan="#{cat2_summary[:children].first.last[:height]}"} = cat3_summary[:movie_count]
+            - else
+              td
+              td
+        - cat2_summary[:children].each.with_index do |(cat3, cat3_summary), k|
+          - unless k.zero?
+            tr
+              td = link_to cat3.name, admin_category_path(cat3)
+              td.text-center = cat3_summary[:movie_count]

@@ -1,0 +1,10 @@
+- content_for :title do
+  = t('.title')
+
+.l-main-content
+  .breadcrumb.l-mb-sm-30
+    ol
+      li = link_to 'ホーム', root_path
+      li ミュージック
+  = render 'index', music_categories: @music_categories, category_movies: @category_movies,
+                    target_music_category: nil

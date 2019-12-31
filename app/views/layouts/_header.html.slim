@@ -1,0 +1,46 @@
+.l-header
+  .header
+    .l-container.header__inner
+      .header__logo-line
+        - if params[:controller] == 'pages' && params[:action] == 'index'
+          h1.header__logo[itemscope itemtype="http://schema.org/Organization"]
+            a[href="/" itemprop="url"]
+              img[src=(asset_path "logo.svg") alt="SuperYouTuber" itemprop="name"]
+        - else
+          .header__logo[itemscope itemtype="http://schema.org/Organization"]
+            a[href="/" itemprop="url"]
+              img[src=(asset_path "logo.svg") alt="SuperYouTuber" itemprop="name"]
+
+        .header__serach-button-container.j-open-search-panel[class=(@mobile_menu_show ? "" : "is-hide") data-default-show=(@mobile_menu_show ? "1" : "0")]
+          a.header__serach-button.is-open.j-open-search-panel-toggle href="#"
+            span 動画をさがす
+            i.fa.fa-search
+          a.header__serach-button.is-close.j-open-search-panel-toggle href="#"
+            span 閉じる
+            i.fa.fa-times
+
+      .header__search-panel.j-open-search-panel[class=(@mobile_menu_show ? "" : "is-hide")]
+        /.header__keyword-search
+          = form_tag(search_index_path, method: :get) do
+            .keyword-search
+              .keyword-search__field-wrap
+                .field
+                  = text_field_tag 'keyword', '', placeholder: 'キーワード'
+              .keyword-search__submit
+                 button.button 検索
+        .header__menu
+
+          / menu
+          .menu
+            ul.menu__list[itemscope itemtype="http://www.schema.org/SiteNavigationElement"]
+              - [\
+                  ['youtuber', 'user', 'YouTuber', '/'], \
+                  ['category', 'list', 'カテゴリ一覧', '/'], \
+                  ['map', 'map', 'マップ', '/'], \
+                  ['music', 'music', 'ミュージック', '/'], \
+                ].each do |key, icon, label, url|
+                li.menu__item[itemprop="name"]
+                  a[href=url itemprop="url"]
+                    i.fa[class="fa-#{icon} is-#{key} menu__icon"]
+                    div
+                      span.menu__main = label

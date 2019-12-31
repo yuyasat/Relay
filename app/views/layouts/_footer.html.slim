@@ -1,0 +1,37 @@
+.l-footer
+  .footer
+    .footer__inner
+      .footer__logo
+        a[href="/" itemprop="url"]
+          img[src=(asset_path "logo.svg") alt="SuperYouTuber" itemprop="name"]
+      .footer__nav
+        - [\
+            # ['編集者ブログ', '#'], \
+            ['このサイトについて', about_path], \
+            ['利用規約', term_path], \
+            ['プライバシーポリシー', privacy_policy_path], \
+            ['サイトマップ', sitemap_path], \
+          ].each do |label, url|
+          li = link_to label, url
+      .footer__social
+        .social
+          ul.social__list.is-centerd
+            - [\
+               # ['facebook', 'facebook', '#'], \
+                ['twitter', 'twitter', 'https://twitter.com/SuperYouTuberJa'], \
+               # ['instagram', 'instagram', '#'], \
+               # ['youtube', 'youtube', '#'], \
+              ].each do |icon, label, url|
+              li.social__item.is-active
+                = link_to url, title: url, target: '_blank' do
+                  i.fa[class="fa-#{icon}"]
+      /.footer__language
+        - [\
+            ['日本語', '#'], \
+            ['English', '#'], \
+            ['中文', '#'], \
+            ['한국어', '#'], \
+          ].each do |label, url|
+          li
+            a[href=url] = label
+      small.footer__copyright © 2018 SuperYouTuber.com

@@ -1,0 +1,64 @@
+- content_for :title do
+  = t('.title')
+
+.l-main-content
+
+  .breadcrumb.l-mb-xs-15.l-mb-sm-30
+    ol
+      li = link_to 'ホーム', root_path
+      li = 'カテゴリ一覧'
+
+  .l-container
+    .l-row
+      .l-col-md-3.l-mb-xs-15
+        .link-list
+          h1.link-list__head カテゴリ一覧
+          ul.link-list__list
+            - @root_category.decorate.each do |cat1|
+              li
+                = link_to cat1.name, cat1.path
+      .l-col-md-9
+        - @category_movies.each.with_index(1) do |(cat1, movies), i|
+          .l-mb-xs-50
+            .title.is-size-m.l-mb-xs-10.l-mb-md-20
+              .title__inner
+                .title__title = cat1.name
+                .title__right-button
+                  = link_to 'もっと見る', category_path(cat1), class: 'button is-size-s'
+            .l-row
+              = render 'module/infeed_ad_block',
+                       num: 3, movies: movies, sample_ad: @advertisements.memory_scope(browser, i, infeed: true, category: cat1).sample,
+                       clazz: 'l-col-sm-6 l-col-lg-4 l-mb-xs-10 l-mb-lg-20'
+            .l-row.is-align-center
+              .l-col-md-4
+                = link_to category_path(cat1), class: 'button is-width-full' do
+                  span もっと見る
+            - if (ad = @advertisements.memory_scope(browser, i, middle: true, category: cat1).sample).present?
+              .infeed-ad
+                .ad.is-oblong
+                  .ad__inner
+                    = raw ad.content
+
+    / .page-header
+    /   .col-lg-3.col-md-3.col-sm-3
+
+    /   .col-lg-9.col-md-9.col-sm-9
+    /     .row.text-center
+    /       h1.h3 カテゴリ一覧
+    /     - @category_movies.each do |cat1, movies|
+    /       h3.h4 = cat1.name
+    /       - movies.each_slice(5) do |sliced_movies|
+    /         .row.o-3column
+    /           - sliced_movies.each do |movie|
+    /             .col-md-1-5.col-sm-1-5.col-xs-8.with-margin
+    /               .row.text-center
+    /                 = link_to movie.url, target: '_blank' do
+    /                   = image_tag movie.mqdefault_url, alt: movie.title
+    /               .row.movie-published-at.text-right
+    /                 small = movie.published_at.strftime("%Y年%-m月%-d日 %H:%M")
+    /               .row.movie-text
+    /                 small = link_to movie.title, movie.url, target: '_blank'
+    /       .row.small.text-right
+    /         = link_to category_path(cat1) do
+    /           i.fa.fa-angle-double-right
+    /           | もっとみる

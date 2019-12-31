@@ -1,0 +1,45 @@
+.row.text-right
+  = paginate movies
+
+table.table.table-striped.table-hover.admin.small
+  thead
+    tr
+      th id
+      th サムネイル
+      th 動画キー/自動
+      th カテゴリ/ステータス
+      th チャンネル/タイトル
+      th 公開時刻
+      th 作成時刻
+      th 最終更新日
+  tbody
+    - movies.each do |movie|
+      tr
+        td = link_to movie.id, admin_movie_path(movie), target: '_blank'
+        td
+          = link_to movie_path(movie), alt: movie.title, target: '_blank' do
+            = image_tag movie.default_url
+        td
+          = link_to movie.key, movie.url, alt: movie.title, target: '_blank'
+          br
+          = movie.registered_type_i18n
+        td
+          = raw movie.categories.map { |cat| link_to cat.name, admin_category_path(cat), target: '_blank' }.join(', ')
+          br
+          = movie.status_i18n
+        td
+          - if movie.channel.present?
+            = movie.video_artist&.title || movie.channel
+          = raw "[#{link_to '管理画面', admin_video_artist_path(movie.video_artist), target: '_blank'}]"
+          = raw "[#{link_to '本家', movie.channel_url, target: '_blank'}]"
+          br
+          = movie.title
+          - if movie.locations.present?
+            br
+            = raw movie.locations.map { |loc| "#{loc.latitude}, #{loc.longitude}" }.join('<br>')
+        td = movie.published_at&.strftime("%F %T")
+        td = movie.created_at.strftime("%F %T")
+        td = movie.updated_at.strftime("%F %T")
+
+.row.text-right
+  = paginate movies

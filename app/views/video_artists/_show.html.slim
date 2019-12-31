@@ -1,0 +1,47 @@
+/ This partial is called from video_artists/show and music/show
+.video-list-header
+  .l-container
+    .l-row.video-list-header__inner
+      .l-col-lg-6
+        .video-list-header__account.account-header.l-mb-lg-20
+          .account-header__inner
+            .avatar.account-header__avatar
+              img[src=video_artist.high_thumbnail_url alt="#{video_artist.title}"]
+            .account-header__text
+              h1.account-header__name
+                = video_artist.title_with_music_artist(@target_music_category)
+              p.account-header__desc = video_artist.editor_description
+              .account-header__social
+                .social
+                  ul.social__list
+                    - [\
+                        ['facebook', 'facebook', nil], \
+                        ['twitter', 'twitter', @video_artist.twitter ? @video_artist.twitter.url : nil],\
+                        ['instagram', 'instagram', @video_artist.instagram ? @video_artist.instagram.url : nil] , \
+                        ['youtube', 'youtube', @video_artist.channel_url],
+                      ].each do |icon, label, url|
+                      li.social__item[class=(url ? "is-active" : '')]
+                        a[href=url title=label target="_blank" ref="nofollow"]
+                          i.fa[class="fa-#{icon}"]
+
+      .l-col-lg-6
+        .video-list-header__video
+          .yt-video
+            .yt-video__inner
+              iframe{id="myVideo" src="#{movies.latest_published.first.embed_url(autoplay: true, mute: false)}" frameborder="0" allowfullscreen="" style="width:100%;"}
+
+= render 'module/page_top_ad', ad: @advertisements.memory_scope(browser, top: true).sample
+
+.l-container
+  .title.is-size-m.l-mb-xs-10.l-mb-md-20
+    /.title__inner
+      /p.title__title おすすめの動画
+      /.title__right-button
+        a.button.is-size-s[href="#"]
+          span もっと見る
+  .l-row
+    = render 'module/infeed_ad_block',
+             num: 4, movies: movies, sample_ad: @advertisements.memory_scope(browser, infeed: true).sample,
+             clazz: 'l-col-sm-6 l-col-md-4 l-col-lg-3 l-mb-xs-10 l-mb-lg-20'
+  .l-row
+    = paginate movies

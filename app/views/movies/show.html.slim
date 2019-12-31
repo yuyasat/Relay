@@ -1,0 +1,74 @@
+- content_for :title do
+  = t('.title', title: @movie.title)
+- content_for :description do
+  - if @movie.categories.present?
+    = t('.description', title: @movie.title, category: @movie.categories.first.name)
+  - else
+    = t('.description_no_category', title: @movie.title)
+- content_for :og_title do
+  = t('.title', title: @movie.title)
+- content_for :og_description do
+  - if @movie.categories.present?
+    = t('.description', title: @movie.title, category: @movie.categories.first.name)
+  - else
+    = t('.description_no_category', title: @movie.title)
+- content_for :og_image do
+  = @movie.mqdefault_url
+
+.l-main-content
+  .breadcrumb
+    - @movie.categories.each do |c|
+      ol
+        li = link_to 'ホーム', root_path
+        - if c.music?
+          li = link_to 'ミュージック', music_index_path
+        - c.ancestor_categories(only_id: false).select { |c| !c.special_root? }.map(&:decorate).each do |cat|
+          li = link_to cat.name, cat.music? ? cat.music_path : cat.path
+        li = @movie.title
+  .plate.is-bg-black-dark.l-mb-xs-15.l-mb-lg-35
+    .l-container
+      .yt-video
+        .yt-video__inner
+          iframe{id="myVideo" src="#{@movie.embed_url(autoplay: true, mute: false)}" frameborder="0" allowfullscreen="" style="width:100%;"}
+
+  .l-container.l-mb-xs-15.l-mb-lg-35
+    .movie-meta
+      .avatar.movie-meta__avatar
+        = link_to video_artist_path(@movie.video_artist.channel) do
+          = image_tag @movie.video_artist.default_thumbnail_url, alt: @movie.video_artist.title
+      .movie-meta__text
+        h1.movie-meta__title = @movie.title
+        p.movie-meta__desc = @movie.description
+        p.movie-meta__date = @movie.published_at.strftime("%Y年%-m月%-d日 %H:%M")
+        p.movie-meta__publisher = link_to @movie.video_artist.title, video_artist_path(@movie.video_artist.channel)
+
+= render 'module/page_top_ad', ad: @advertisements.memory_scope(browser, top: true).sample
+
+- if @movie.video_artist.present?
+  .l-container
+    .title.is-size-m.l-mb-xs-10.l-mb-md-20
+      .title__inner
+        p.title__title = "同じYouTuber（#{@movie.video_artist.title}）の動画"
+        - if @movie.video_artist.movies.active.where.not(id: @movie.id).count > 12
+          .title__right-button
+            = link_to 'もっと見る', video_artist_path(@movie.video_artist.channel), class: 'button is-size-s'
+    .l-row
+    .l-row
+      - movies = @movie.video_artist.latest_published_movies.active.where.not(id: @movie.id).limit(12)
+      = render 'module/infeed_ad_block',
+               num: 4, movies: movies, sample_ad: @advertisements.memory_scope(browser, infeed: true, youtuber: true).sample,
+               clazz: 'l-col-sm-6 l-col-md-4 l-col-lg-3 l-mb-xs-10 l-mb-lg-20'
+
+- @movie.categories.decorate.select { |c| !c.music? }.each.with_index(1) do |cat, i|
+  .l-container
+    .title.is-size-m.l-mb-xs-10.l-mb-md-20
+      .title__inner
+        p.title__title = "同じカテゴリ（#{cat.name}）の動画"
+        - if cat.movies.active.where.not(id: @movie.id).count > 12
+          .title__right-button
+            = link_to 'もっと見る', cat.path, class: 'button is-size-s'
+    .l-row
+      - movies = cat.movies.active.latest_published.where.not(id: @movie.id).limit(12)
+      = render 'module/infeed_ad_block',
+               num: 4, movies: movies, sample_ad: @advertisements.memory_scope(browser, i, infeed: true, category: cat.id).sample,
+               clazz: 'l-col-sm-6 l-col-md-4 l-col-lg-3 l-mb-xs-10 l-mb-lg-20'

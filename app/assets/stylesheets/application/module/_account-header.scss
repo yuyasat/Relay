@@ -1,0 +1,37 @@
+.account-header {
+  &__inner {
+    display: flex;
+    align-items: center;
+  }
+  &__text {
+    flex: 1;
+  }
+  &__avatar {
+    max-width: 90px;
+    margin-right: 10px;
+    @include screen-size(lg) {
+      max-width: 160px;
+      margin-right: 20px;
+    }
+  }
+  &__name {
+    margin-bottom: 10px;
+    padding: 0 10px;
+    @include font(ll);
+    @include screen-size(lg) {
+      @include font(lll);
+    }
+  }
+  &__desc {
+    width: 70%;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    max-width: 500px;
+    @include font(s);
+    @include screen-size(lg) {
+      @include font(m);
+    }
+  }
+  &__social {
+  }
+}

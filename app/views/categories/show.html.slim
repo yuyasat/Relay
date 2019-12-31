@@ -1,0 +1,51 @@
+- content_for :title do
+  = t('.title', category: @category.name)
+- content_for :description do
+  = t('.description', category: @category.name, count: @category.related_categories_movies.count)
+- content_for :og_title do
+  = t('.title', category: @category.name)
+- content_for :og_description do
+  = t('.description', category: @category.name, count: @category.related_categories_movies.count)
+- content_for :og_image do
+  = @movies.first.mqdefault_url
+
+.l-main-content
+  / .breadcrumb.l-mb-xs-15.l-mb-sm-30
+
+  .breadcrumb.l-mb-xs-15.l-mb-sm-30
+    ol
+      li= link_to 'ホーム', root_path
+      li= link_to 'カテゴリ一覧', '/categories'
+      - @category.ancestor_categories(only_id: false).map(&:decorate).each do |cat|
+        - if @category.id == cat.id
+          li = cat.name
+        - else
+          li = link_to cat.name, cat.path
+
+  .l-container
+
+    .l-row
+      .l-col-md-3
+
+        .link-list.l-mb-xs-15
+          .link-list__head = @category.name
+          ul.link-list__list
+            - @category.children.includes(:parent_category).decorate.each do |cat|
+              li
+                = link_to cat.name, cat.path
+            - @category.ancestor_categories(only_id: false).map(&:decorate).each do |cat|
+              - unless @category.id == cat.id
+                li = link_to "#{cat.name}一覧に戻る", cat.path
+            li = link_to "カテゴリ一覧に戻る", '/categories'
+
+      .l-col-md-9
+        .category-head.l-mb-xs-10.l-mb-md-20
+          h1.category-head__title = @category.name
+          - if @category.description.present?
+            p.category-head__description = @category.description
+        .l-row.l-mb-xs-10.l-mb-lg-20
+          = render 'module/infeed_ad_block',
+                   num: 3, movies: @movies, sample_ad: @advertisements.memory_scope(browser, infeed: true).sample,
+                   clazz: 'l-col-sm-6 l-col-lg-4 l-mb-xs-10 l-mb-lg-20'
+        .l-row.l-mb-xs-30.l-mb-lg-50
+          = paginate @movies

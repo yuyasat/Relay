@@ -1,0 +1,9 @@
+- if ads_infeed.script_tag?
+  = raw ads_infeed.content
+- else
+  .infeed-ad
+    .ad
+      .ad__inner
+        .ad__sponsored
+          = raw ads_infeed.content
+          .ad__sponsored__text 広告

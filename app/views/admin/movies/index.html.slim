@@ -1,0 +1,83 @@
+.page-header
+  .row
+    .bs-component#admin-movie
+      = render 'admin/error_message'
+      = form_for([:admin, @movie], class: 'form-horizontal') do |f|
+        fieldset
+          legend 新規作成
+          .col-xs-6
+            .row{style="margin-bottom: 8px"}
+              .form-group
+                label.col-xs-4.control-label.small for="movie_url" URL
+                = f.text_field :url, class: 'small form-controll col-xs-8 admin-text', 'v-model': 'url'
+            .row{style="margin-bottom: 8px"}
+              .form-group
+                label.col-xs-6.control-label.small for="movie_key"
+                  | 動画キー
+                  br
+                  |（watch?v=*******）
+                = f.text_field :key, class: 'small form-controll col-xs-6 admin-text', placeholder: "*******の箇所", 'v-model': 'key'
+              .small.text-danger{v-if="showError" v-cloak=""}
+                | {{ errorText }}
+            .row{style="margin-bottom: 8px"}
+              .form-group
+                label.col-xs-4.control-label.small for="movie_title" タイトル
+                = f.text_field :title, class: 'small form-controll col-xs-8 admin-text', 'v-bind:value': 'title'
+            .row
+              .form-group
+                label.col-xs-4.control-label.small for="movie_categories" カテゴリ1
+                = f.fields_for :movie_categories, @movie.movie_categories.new do |cat_f|
+                  = cat_f.select :category_id, Category.html_options(with_root: false),
+                                 { selected: params[:category_id], include_blank: '選択してください' },
+                                 class: 'form-controll col-xs-8 small', '@change': 'handleLatLong'
+            .row
+              .form-group{v-show='true'}
+                label.col-xs-4.control-label.small for="movie_categories" カテゴリ2
+                = f.fields_for :movie_categories, @movie.movie_categories.new do |cat_f|
+                  = cat_f.select :category_id, Category.html_options(with_root: false),
+                                 { selected: params[:category_id2], include_blank: '選択してください' },
+                                 class: 'form-controll col-xs-8 small'
+            .row{v-for="latlong in latLongArray" v-cloak=""}
+              movie-location{:latlong="latlong"}
+          .col-xs-6
+            .row{style="margin-bottom: 8px"}
+              .form-group
+                label.col-xs-6.control-label.small for="movie_published_at" 公開日
+                .small{v-cloak=""}
+                  = f.hidden_field :published_at, 'v-bind:value': 'publishedAt'
+                  | {{ publishedAt }}
+            .row{style="margin-bottom: 8px"}
+              .form-group
+                label.col-xs-6.control-label.small for="movie_channel" チェネルID
+                .small{v-cloak=""}
+                  = f.hidden_field :channel, 'v-bind:value': 'channel'
+                  | {{ channel }}
+            .row{style="margin-bottom: 8px"}
+              .form-group
+                label.col-xs-2.control-label.small for="movie_description" 説明文
+                = f.text_area :description, class: 'form-controll col-xs-10', rows: 4, 'v-model': 'description'
+            .row.text-right
+              .form-group
+                = f.submit '作成', class: 'btn btn-primary'
+.row.text-center
+  = "現在の動画数：#{Movie.active.count}"
+
+#admin-movie-list
+  .row.text-right
+    paginate :click-handler="paginationClick" :container-class="'className'" :next-text="'Next'" :page-count="totalPages" :prev-text="'Prev'" class="pagination pagination-sm"
+      li slot="prevContent"
+        i.fa.fa-angle-left
+      li slot="nextContent"
+        i.fa.fa-angle-right
+  .row
+    .col-xs-12
+      .form-group
+        label.col-xs-2.control-label.small for="title_search" 動画キー検索
+        .col-xs-3
+          = text_field_tag :title_search, '', class: 'small form-controll admin-text', 'v-model': 'titleSearch'
+  category-select
+
+  movie-list{:movies="movies"}
+
+= javascript_include_tag 'adminMovie'
+= javascript_include_tag 'adminMovieList'

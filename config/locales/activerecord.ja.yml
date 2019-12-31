@@ -1,0 +1,40 @@
+ja:
+  activerecord:
+    errors:
+      messages:
+        be_ten_points: 'は10ポイントにしてください'
+        not_less_than_two: 'は2つ以上にしてください'
+        not_duplicate: 'は重複できません'
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+        restrict_dependent_destroy:
+          has_one: "%{record}が存在しているので削除できません"
+          has_many: "%{record}が存在しているので削除できません"
+    attributes:
+      user:
+        email: 'メールアドレス'
+        password: 'パスワード'
+        password_confirmation: 'パスワード（再入力）'
+        current_password: '現在のパスワード'
+        remember_me: '次回から自動的にログインする'
+        nickname: 'ニックネーム'
+      movie:
+        channel: 'チェネルID'
+        key: '動画キー'
+        title: 'タイトル'
+        published_at: '公開日'
+        url: 'URL'
+  enums:
+    movie:
+      status:
+        active: '表示'
+        deleted: 'YouTube上で削除'
+        invisible: 'SuperYouTuber上で非表示'
+      registered_type:
+        manual: '手動'
+        auto: '自動'
+        auto_checked: '確認済み'
+    video_artist:
+      auto_movie_registration_type:
+        ignore: '自動登録しない'
+        all: '必ず登録'
+        if_definition_exists: '自動動画登録に定義されている場合のみ'

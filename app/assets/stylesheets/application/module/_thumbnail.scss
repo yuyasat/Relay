@@ -1,0 +1,60 @@
+.thumbnail {
+  &.is-movie {
+    overflow: hidden;
+    background: #000;
+    position: relative;
+    a {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      transition: all 0.3s ease;
+      transform: scale(1.03);
+    }
+    &:before {
+      content: '';
+      display: block;
+      padding-top: 56.25%;
+    }
+    &:after {
+      @include fa("\f04b");
+      position: absolute;
+      font-size: 16px;
+      padding: 0.5em 1.2em;
+      border-radius: 10px;
+      background: color(red);
+      color: color(white);
+      left: calc(50% - 1.7em);
+      top: calc(50% - 1em);
+      z-index: 1;
+      transition: all 0.4s;
+      transform: scale(1.4);
+      opacity: 0;
+      pointer-events: none;
+    }
+    @include screen-size(xl) {
+      &:hover {
+        img {
+          transform: scale(1.15);
+          opacity: 0.8;
+        }
+        &:after {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    }
+  }
+  &.is-on-map {
+    width: 80px;
+    @include screen-size(md) {
+      width: 150px;
+    }
+  }
+}

@@ -1,0 +1,57 @@
+.l-main-content
+  .breadcrumb.l-mb-xs-30
+    ol
+      li= link_to 'ホーム', root_path
+      li マップ
+  .l-container
+
+  .l-container#spots-categories
+    .l-row
+      .l-col-md-3.l-mb-xs-15
+        - @root_category.decorate.flatten.each.with_index do |cat2, i|
+          .link-list.is-accordion[:class="{'is-shown':show(#{i})}"]
+            .accordion
+              h2.link-list__head[@click="toggle(#{i})"] = cat2.name
+            transition[
+              v-on:before-enter="onBeforeEnter" v-on:enter="onEnter"
+              v-on:before-leave="onBeforeLeave" v-on:leave="onLeave"
+            ]
+              ul.link-list__list.accordion-body[v-show="show(#{i})" v-cloak]
+                - cat2.children.decorate.each do |cat3|
+                  li
+                    = link_to cat3.name, cat3.spots_path
+      .l-col-md-9
+        .title.is-size-l.l-mb-xs-30
+          .title__inner
+            h1.title__title
+              i.fa.fa-search
+              | 場所の動画
+        .map.l-mb-xs-30
+          .l-row.is-align-center
+            .l-col-xs-12.l-col-lg-8
+              .map__keyword.l-mb-xs-30.l-mb-lg-50
+                p.map__keyword-title 目的の場所を入力してください
+                .field.is-l
+                  input#pac-input{type="text" placeholder="所在地・場所の名称"}
+          .map__map-container
+            #map.map__map
+
+        - @category_movies.each do |cat1, movies|
+          - cat1 = cat1.decorate
+          .l-mb-xs-50
+            .title.is-size-m.l-mb-xs-10.l-mb-md-20
+              .title__inner
+                p.title__title = cat1.name
+                .title__right-button
+                  = link_to 'もっと見る', cat1.spots_path, class: 'button is-size-s'
+
+            .l-row
+              = render partial: 'module/movie', collection: movies, as: 'movie',
+                       locals: { clazz: 'l-col-sm-6 l-col-lg-4 l-mb-xs-10 l-mb-lg-20' }
+            .l-row.is-align-center
+              .l-col-md-4
+                = link_to cat1.spots_path, class: 'button is-width-full' do
+                  span もっと見る
+
+= javascript_include_tag 'spots_categories'
+= javascript_include_tag 'spots'

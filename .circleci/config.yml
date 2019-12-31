@@ -1,0 +1,95 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.5-node-browsers
+        environment:
+          TZ: "/usr/share/zoneinfo/Asia/Tokyo"
+          BUNDLE_PATH: vendor/bundle
+          RDS_HOSTNAME: 127.0.0.1
+          RDS_DB_NAME: yt_summary_test
+          RDS_USERNAME: yt_summary_test
+          RAILS_ENV: test
+          CIRCLE_ARTIFACTS: /tmp/artifacts
+      - image: mdillon/postgis:9.5
+        environment:
+          POSTGRES_USER: yt_summary_test
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - Rails-Gemfile-Yarn-{{ checksum "Gemfile.lock" }}-{{ checksum "frontend/yarn.lock" }}
+            # Find the most recent cache used from any branch
+            - Rails-Gemfile-Yarn-
+      - run:
+          name: Install aws command
+          command: |
+            if [[ $CIRCLE_BRANCH =~ develop|master && $CIRCLE_NODE_INDEX -eq 0 ]]; then
+              wget https://bootstrap.pypa.io/get-pip.py
+              sudo python get-pip.py
+              sudo apt-get install python-dev
+              sudo pip install awscli
+            fi
+      - run:
+          name: Install Chrome
+          command: |
+            sudo apt install -y libappindicator3-1
+            curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo dpkg -i google-chrome.deb
+            sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
+            rm google-chrome.deb
+      - run:
+          name: Install kakasi
+          command: |
+            if [ ! -e /tmp/kakasi-2.3.6 ]; then
+              cd /tmp/
+              wget http://kakasi.namazu.org/stable/kakasi-2.3.6.tar.gz
+
+              gzip -dc kakasi-2.3.6.tar.gz | tar xvf -
+
+              cd kakasi-2.3.6
+
+              ./configure
+              make
+              sudo make install
+            fi
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run:
+          name: Install Frontend Dependencies
+          command: cd frontend; yarn install
+      - run:
+          name: Build Frontend
+          command: cd frontend; yarn release
+      - save_cache:
+          key: Rails-Gemfile-Yarn-{{ checksum "Gemfile.lock" }}-{{ checksum "frontend/yarn.lock" }}
+          paths:
+            - vendor/bundle
+            - frontend/node_modules
+      - run:
+          name: Execute Assets Precompile and s3 sync
+          command: |
+            if [[ $CIRCLE_BRANCH =~ develop|master && $CIRCLE_NODE_INDEX -eq 0 ]]; then
+              RAILS_ENV=production bundle exec rake assets:precompile
+              aws s3 sync public/assets/ s3://prod-super-youtuber/public/assets
+            fi
+      - run:
+          name: Database Setup
+          command: bundle exec rake db:create db:migrate
+      - run:
+          name: Run Rails Tests
+          command: |
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+
+            bundle exec rspec --format progress \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
+
+      - store_artifacts:
+          path: /tmp/artifacts
+          destination: test-results

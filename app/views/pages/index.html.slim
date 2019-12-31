@@ -1,0 +1,57 @@
+.l-main-content.is-no-breadcrumb.is-mobile-menu-show
+  - if @featured_movies.present?
+    .l-container.l-mb-xs-20.l-mb-lg-50
+      .l-row
+        .l-col-md-6.l-mb-xs-10
+          .title.is-size-m.l-mb-xs-10.l-mb-md-20
+            .title__inner
+              p.title__title 編集部おすすめの動画
+          .slider
+            .slider__wrapper
+              - @featured_movies.each do |movie|
+                .slider__slide
+                  = render 'module/movie_l', movie: movie
+            .slider__pagination
+        - if (ads_top = @advertisements.memory_scope(browser, top: true).sample).present?
+          .l-col-md-6
+            - if ads_top.script_tag?
+              / paddingをとるためのdummy
+              .title.is-size-m.l-mb-xs-10.l-mb-md-20
+                .title__inner
+              div[style="text-align: center;"] = raw ads_top.content
+              .ad__sponsored__text__center 広告
+            - else
+              .ad.is-top-banner
+                .ad__inner
+                  div = raw ads_top.content
+                  div 広告
+
+  .l-container.l-mb-xs-50
+    .title.is-size-m.l-mb-xs-10.l-mb-md-20
+      .title__inner
+        p.title__title 新着YouTuber動画
+        .title__right-button
+    .l-row
+      = render 'module/infeed_ad_block',
+               num: 4, movies: @latest_movies,
+               sample_ad: [],
+               clazz: 'l-col-sm-6 l-col-md-4 l-col-lg-3 l-mb-xs-10 l-mb-lg-20'
+
+  - @category_movies.each.with_index(1) do |(cat1, movies), i|
+    .l-container.l-mb-xs-50
+      .title.is-size-m.l-mb-xs-10.l-mb-md-20
+        .title__inner
+          p.title__title = cat1.name
+          .title__right-button
+            = link_to 'もっと見る', category_path(cat1), class: 'button is-size-s'
+
+      .l-row
+        = render 'module/infeed_ad_block',
+                 num: 4, movies: movies,
+                 sample_ad: @advertisements.memory_scope(browser, i, infeed: true, category: cat1).sample,
+                 clazz: 'l-col-sm-6 l-col-md-4 l-col-lg-3 l-mb-xs-10 l-mb-lg-20'
+
+      .l-row.is-align-center
+        .l-col-md-4
+          = link_to category_path(cat1), class: 'button is-width-full' do
+            span もっと見る

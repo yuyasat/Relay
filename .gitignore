@@ -1,0 +1,18 @@
+.ruby-version
+*.log
+tmp/*
+/frontend/node_modules
+/.bundle
+/coverage
+/app/assets/javascripts/*
+/public/assets/*
+.envrc
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml

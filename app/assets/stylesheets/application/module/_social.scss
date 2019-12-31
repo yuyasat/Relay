@@ -1,0 +1,17 @@
+.social {
+  &__list {
+    display: block;
+    &.is-centerd {
+      text-align: center;
+    }
+  }
+  &__item {
+    margin: 0 14px;
+    font-size: 22px;
+    color: color(gray, light);
+    display: inline-block;
+    &.is-active {
+      color: color(black);
+    }
+  }
+}
