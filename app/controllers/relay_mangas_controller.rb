@@ -1,6 +1,6 @@
 class RelayMangasController < ApplicationController
   def index
-    @relay_mangas = RelayManga.all.includes(:genres)
+    @relay_mangas = RelayManga.all.order('genres.id asc').includes(:genres)
   end
 
   def show
