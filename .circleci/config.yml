@@ -75,7 +75,7 @@ jobs:
           command: |
             if [[ $CIRCLE_BRANCH =~ develop|master && $CIRCLE_NODE_INDEX -eq 0 ]]; then
               RAILS_ENV=production bundle exec rake assets:precompile
-              aws s3 sync public/assets/ s3://prod-super-youtuber/public/assets
+              aws s3 sync public/assets/ s3://prod-relay/public/assets
             fi
       - run:
           name: Database Setup
