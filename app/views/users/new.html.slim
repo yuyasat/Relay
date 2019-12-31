@@ -1,0 +1,20 @@
+.l-main-content.is-no-breadcrumb
+  .l-container.l-mb-xs-20.l-mb-lg-50
+    .l-row
+      .l-col-md-6.l-mb-xs-10
+        = form_with(model: @user, method: :post) do |f|
+          .keyword-search
+            .keyword-search__field-wrap
+              .field
+                = f.label :nickname
+                = f.text_field :nickname
+              .field
+                = f.label :email
+                = f.email_field :email
+              .field
+                = f.label :password
+                = f.password_field :password
+              .field
+                = f.label :password_confirmation
+                = f.password_field :password_confirmation
+          = f.submit '登録する'
