@@ -83,9 +83,6 @@ RSpec.configure do |config|
   config.before(:suite) do
   end
 
-  config.after(:each, type: lambda { |v| v != :system }) do
-  end
-
   # capybara
   # Capybara::Screenshot.autosave_on_failure = ENV['CAPYBARA_SCREENSHOT']&.to_b
   # Capybara.default_max_wait_time = 2
@@ -99,14 +96,4 @@ RSpec.configure do |config|
       driven_by :selenium_chrome_headless, screen_size: [1400, 1400]
     end
   end
-
-  # config.after do |example|
-  #   if example.metadata[:type] == :system and example.exception.present?
-  #     puts ''
-  #     puts example.metadata[:full_description]
-  #     puts example.metadata[:location]
-  #     puts example.exception
-  #     binding.pry     # 敢えてエラーになったら止める
-  #   end
-  # end
 end
