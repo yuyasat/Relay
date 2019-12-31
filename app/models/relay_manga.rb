@@ -3,6 +3,7 @@ require 'csv'
 class RelayManga < ApplicationRecord
   has_many :relay_manga_genres
   has_many :genres, through: :relay_manga_genres
+  has_many :manga_frames
 
   enum status: {
     draft: 1,

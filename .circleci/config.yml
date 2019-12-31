@@ -10,6 +10,8 @@ jobs:
           RDS_DB_NAME: yt_summary_test
           RDS_USERNAME: yt_summary_test
           RAILS_ENV: test
+          AWS_BUCKET: test-relay
+          AWS_S3_PREFIX: manga_frames
           CIRCLE_ARTIFACTS: /tmp/artifacts
       - image: circleci/postgres:9.6
         environment:
