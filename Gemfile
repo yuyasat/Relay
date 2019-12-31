@@ -27,6 +27,8 @@ gem 'activerecord-import'
 gem 'enum_help'
 gem 'rails_12factor', group: :production
 gem 'sitemap_generator'
+gem 'aws-sdk-s3'
+gem 'shrine'
 
 group :development do
   gem 'web-console', '~> 2.0'

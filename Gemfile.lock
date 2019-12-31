@@ -65,6 +65,22 @@ GEM
     addressable (2.4.0)
     ast (2.4.0)
     awesome_print (1.8.0)
+    aws-eventstream (1.0.3)
+    aws-partitions (1.260.0)
+    aws-sdk-core (3.86.0)
+      aws-eventstream (~> 1.0, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1.0)
+    aws-sdk-kms (1.27.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.60.1)
+      aws-sdk-core (~> 3, >= 3.83.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.1.0)
+      aws-eventstream (~> 1.0, >= 1.0.2)
     backports (3.15.0)
     bcrypt (3.1.13)
     better_errors (2.5.1)
@@ -100,6 +116,7 @@ GEM
       activesupport (>= 4.2)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-schema (~> 1.0)
+    content_disposition (1.0.0)
     coolline (0.5.0)
       unicode_utils (~> 1.4)
     crass (1.0.5)
@@ -108,6 +125,7 @@ GEM
     deep_merge (1.2.1)
     diff-lcs (1.3)
     docile (1.1.5)
+    down (4.5.0)
     draper (3.1.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -186,6 +204,7 @@ GEM
     jaro_winkler (1.5.4)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
+    jmespath (1.4.0)
     jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -368,6 +387,9 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    shrine (2.19.3)
+      content_disposition (~> 1.0)
+      down (~> 4.1)
     simplecov (0.13.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -447,6 +469,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   awesome_print
+  aws-sdk-s3
   better_errors
   binding_of_caller
   browser
@@ -488,6 +511,7 @@ DEPENDENCIES
   rubocop-rspec
   sassc-rails
   sdoc (~> 0.4.0)
+  shrine
   simplecov
   sitemap_generator
   slim-rails

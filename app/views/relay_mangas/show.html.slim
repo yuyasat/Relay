@@ -12,4 +12,12 @@
         .category-head.l-mb-xs-10.l-mb-md-20
           h1.category-head__title = @relay_manga.title
           p.category-head__description テキストテキスト
+        - if current_user
+          .l-col-md-12.l-mb-xs-15
+            = form_with model: @relay_manga.manga_frames.new, url: relay_manga_path(@relay_manga), method: :put do |f|
+              = f.file_field :meta
+              = f.submit class: "waves-light btn mod-btn mod-btn--primary", data: { confirm: "ファイルをアップロードしますか？" }
         .l-col-md-12.l-mb-xs-15
+          - @relay_manga.manga_frames.select(&:persisted?).each do |frame|
+            = "投稿者：#{frame.user.nickname}"
+            img[src="#{frame.meta_url}"]
