@@ -18,7 +18,7 @@
           ul.social__list.is-centerd
             - [\
                # ['facebook', 'facebook', '#'], \
-                ['twitter', 'twitter', 'https://twitter.com/SuperYouTuberJa'], \
+               # ['twitter', 'twitter', 'https://twitter.com/SuperYouTuberJa'], \
                # ['instagram', 'instagram', '#'], \
                # ['youtube', 'youtube', '#'], \
               ].each do |icon, label, url|
@@ -34,4 +34,4 @@
           ].each do |label, url|
           li
             a[href=url] = label
-      small.footer__copyright © 2018 SuperYouTuber.com
+      small.footer__copyright = "© 2020-#{Time.current.year} kabukimono"
