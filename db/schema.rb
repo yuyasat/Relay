@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_31_091121) do
+ActiveRecord::Schema.define(version: 2019_12_31_123516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,16 @@ ActiveRecord::Schema.define(version: 2019_12_31_091121) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "manga_frames", force: :cascade do |t|
+    t.bigint "relay_manga_id", null: false
+    t.bigint "user_id", null: false
+    t.jsonb "meta", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["relay_manga_id"], name: "index_manga_frames_on_relay_manga_id"
+    t.index ["user_id"], name: "index_manga_frames_on_user_id"
   end
 
   create_table "relay_manga_genres", force: :cascade do |t|

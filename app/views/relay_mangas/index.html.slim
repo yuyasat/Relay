@@ -15,4 +15,4 @@
             ul.link-list__list
               - @relay_mangas.each do |relay_manga|
                 li
-                  = link_to "#{relay_manga.genres.map(&:name).join('×') } | #{relay_manga.title}", root_path
+                  = link_to "#{relay_manga.genres.map(&:name).join('×') } | #{relay_manga.title}", relay_manga_path(relay_manga)
