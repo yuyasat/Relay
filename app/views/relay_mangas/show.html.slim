@@ -18,6 +18,8 @@
               = f.file_field :meta
               = f.submit class: "waves-light btn mod-btn mod-btn--primary", data: { confirm: "ファイルをアップロードしますか？" }
         .l-col-md-12.l-mb-xs-15
-          - @relay_manga.manga_frames.select(&:persisted?).each do |frame|
-            = "投稿者：#{frame.user.nickname}"
-            img[src="#{frame.meta_url}"]
+          - @relay_manga.manga_frames.order('manga_frames.id asc').select(&:persisted?).each do |frame|
+            .l-col-sm-6.l-col-lg-4.l-mb-xs-10.l-mb-lg-20.relay-manga--show__frame[style="margin: auto;"]
+              = "投稿者：#{frame.user.nickname}"
+              br
+              img[src="#{frame.meta_url}" style="width: 80%;"]
