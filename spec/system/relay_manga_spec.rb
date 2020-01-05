@@ -7,7 +7,7 @@ RSpec.describe 'relay-mangas' do
   end
 
   scenario 'リレー漫画一覧' do
-    expect(RelayManga.count).to eq 2
+    expect(RelayManga.count).to eq 105
 
     visit relay_mangas_path
 
