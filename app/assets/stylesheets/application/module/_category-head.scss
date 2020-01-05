@@ -12,6 +12,13 @@
       @include font(lll);
     }
   }
+  &__genre {
+    @include font(l);
+    text-align: center;
+    @include screen-size(lg) {
+      @include font(ll);
+    }
+  }
   &__description {
     margin-top: 10px;
     line-height: 1.75;

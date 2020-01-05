@@ -11,6 +11,7 @@
       .l-col-md-12
         .category-head.l-mb-xs-10.l-mb-md-20
           h1.category-head__title = @relay_manga.title
+          h1.category-head__genre = @relay_manga.genres.map(&:name).join('× ')
           p.category-head__description テキストテキスト
         - if current_user
           .l-col-md-12.l-mb-xs-15
@@ -18,7 +19,7 @@
               = f.file_field :meta
               = f.submit class: "waves-light btn mod-btn mod-btn--primary", data: { confirm: "ファイルをアップロードしますか？" }
         .l-col-md-12.l-mb-xs-15
-          - @relay_manga.manga_frames.order('manga_frames.id asc').select(&:persisted?).each do |frame|
+          - @relay_manga.manga_frames.includes(:user).order('manga_frames.id asc').select(&:persisted?).each do |frame|
             .l-col-sm-6.l-col-lg-4.l-mb-xs-10.l-mb-lg-20.relay-manga--show__frame[style="margin: auto;"]
               = "投稿者：#{frame.user.nickname}"
               br
